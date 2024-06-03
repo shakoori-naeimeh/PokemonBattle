@@ -1,7 +1,8 @@
 import React from "react"
 import { useBattle } from "../../app/hooks/useBattle"
-import { useAppSelector } from "../../app/hooks/storeHooks"
+import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHooks"
 import styled from '@emotion/styled'
+import { battleIsOver } from "./battleGroundSlice"
 
 const Container = styled.div`
   display: flex;
@@ -27,6 +28,7 @@ const Pokemon = styled.div`
 `
 const PokemonName = styled.h2`
   padding-right: 100px;
+  text-transform: capitalize;
 `
 
 const Power = styled.div`
@@ -37,6 +39,11 @@ const Power = styled.div`
   border-radius: 26px;
   padding: 0px 25px;
 `
+const PowerName = styled.p`
+  padding-right: 8px;
+  text-transform: capitalize;
+`
+
 const PokemonImage = styled.img`
   width: 300px
 `
@@ -49,9 +56,10 @@ const BattleLog = styled.div`
   flex-direction: column;
   border: 1px solid;
   border-radius: 16px;
-  width: 300px;
-  height: 300px; 
-  padding-right: 100px;
+  width: 550px;
+  height: 150px; 
+  padding: 10px;
+  margin-right: 10px;
 `
 const Button = styled.button`
   height: 40px;
@@ -59,12 +67,12 @@ const Button = styled.button`
   border-radius: 10px;
   border: 1px solid;
   padding: 0 25px;
-}
 `
 
 export const BattleGround = () => {
+  const dispatch = useAppDispatch()
   useBattle()
-  const {leftPokemon, leftPokemonMove, rightPokemon, rightPokemonMove, winner, status}  = useAppSelector(state => state.battleGround)
+  const {leftPokemon, leftPokemonMove, rightPokemon, rightPokemonMove, status, log }  = useAppSelector(state => state.battleGround)
 
   if (status === "loading")
     return <>loading...</> 
@@ -75,7 +83,7 @@ export const BattleGround = () => {
       <Pokemon>
           <PokemonName>{rightPokemon?.name}</PokemonName>
           <Power>
-            <p>{rightPokemonMove?.name}</p> <p>{rightPokemonMove?.power || 0}</p>
+            <PowerName>{rightPokemonMove?.name}:</PowerName> <p>{rightPokemonMove?.power || 0}</p>
           </Power>
         </Pokemon>
         <PokemonImage src={rightPokemon?.frontSprite}/>
@@ -85,13 +93,13 @@ export const BattleGround = () => {
       <Pokemon>
           <PokemonName>{leftPokemon?.name}</PokemonName>
           <Power>
-            <p>{leftPokemonMove?.name}</p> <p>{leftPokemonMove?.power || 0}</p>
+            <PowerName>{leftPokemonMove?.name}:</PowerName> <p>{leftPokemonMove?.power || 0}</p>
           </Power>
         </Pokemon>
      </PokemonDetails>
      <BattleLogContainer>
-      <BattleLog>{winner}</BattleLog>
-      <Button>Start Battle!</Button>
+      <BattleLog>{status === "done" ? log : ""}</BattleLog>
+      <Button onClick={() => dispatch(battleIsOver())}>Start Battle!</Button>
      </BattleLogContainer>
 
     </Container>

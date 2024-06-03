@@ -16,8 +16,8 @@ export interface BattleGroundState {
   leftPokemon?: Pokemon
   rightPokemonMove?: MoveDetails
   leftPokemonMove?: MoveDetails
-  winner?: string
-  status: "loading" | "ready"
+  log?: string
+  status: "loading" | "ready" | "done"
 }
 
 const initialState: BattleGroundState = {
@@ -25,10 +25,29 @@ const initialState: BattleGroundState = {
   leftPokemon: undefined,
   rightPokemonMove: undefined,
   leftPokemonMove: undefined,
-  winner: "",
+  log: "",
   status: "loading"
 }
 
+interface generateLogProps {
+  rightPokemonName: string | undefined
+  leftPokemonName: string | undefined
+  rightPokemonMove: MoveDetails | undefined
+  leftPokemonMove: MoveDetails | undefined
+}
+
+const generateLog = ({rightPokemonName, leftPokemonName, rightPokemonMove, leftPokemonMove}: generateLogProps) => {
+  if (!rightPokemonName || !leftPokemonName || !rightPokemonMove || !leftPokemonMove) 
+    return ""
+
+  if (leftPokemonMove.power === rightPokemonMove.power ) {
+    return "Draw"
+  } else if (leftPokemonMove.power > rightPokemonMove.power) {
+      return  `${leftPokemonName} lands a decisive blow with ${leftPokemonMove.name} knocking out ${rightPokemonName}!`
+  } else {
+      return  `${rightPokemonName} lands a decisive blow with ${rightPokemonMove.name} knocking out ${leftPokemonName}!`
+  }
+}
 
 export const battleGroundSlice = createSlice({
   name: 'battleGround',
@@ -39,11 +58,18 @@ export const battleGroundSlice = createSlice({
       state.leftPokemon = action.payload.leftPokemon;
       state.rightPokemonMove = action.payload.rightPokemonMove;
       state.leftPokemonMove = action.payload.leftPokemonMove;
+      state.log = generateLog({
+        rightPokemonName: action.payload.rightPokemon?.name, 
+        leftPokemonName: action.payload.leftPokemon?.name,
+        rightPokemonMove: action.payload?.rightPokemonMove, 
+        leftPokemonMove: action.payload?.leftPokemonMove
+      })
       state.status = action.payload.status;
     },
+    battleIsOver: (state) => { state.status = "done" } 
   },
 })
 
-export const { setBattleGround } = battleGroundSlice.actions
+export const { setBattleGround, battleIsOver } = battleGroundSlice.actions
 
 export default battleGroundSlice.reducer

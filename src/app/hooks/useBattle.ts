@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGetPokemonsQuery, useGetPokemonQuery, useGetMoveQuery } from "../../features/pokemon/pokemoneApiSlice";
-import { useAppDispatch, useAppSelector } from "./storeHooks";
+import { useAppDispatch } from "./storeHooks";
 import { setBattleGround } from "../../features/battleGround/battleGroundSlice";
 
 export const useBattle = () => {
@@ -14,6 +14,13 @@ export const useBattle = () => {
   const [loading, setLoading] = useState("loading")
   useEffect(() => {
     if (rightPokemon && leftPokemon && rightPokemonMove && leftPokemonMove) {
+      let winner = "tie"
+      if (leftPokemonMove.power < rightPokemonMove.power) {
+        winner = "rightPokemon"
+      } else if (leftPokemonMove.power > rightPokemonMove.power) {
+        winner = "leftPokemonMove"
+      }
+
       dispatch(setBattleGround({
         rightPokemon: {
           name: rightPokemon.name,

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export interface Pokemon {
+export interface PokemonUrl {
   name: string;
   url: string;
 }
@@ -11,7 +11,7 @@ export interface PokemonQueryResult {
     next: string
     previouse: string
   }
-  results: Pokemon[]
+  results: PokemonUrl[]
 }
 
 export interface PokemonDetails {
@@ -20,20 +20,19 @@ export interface PokemonDetails {
   frontSprite: string
   backSprite: string
   primaryType: string
-  moves: Move[]
+  moves: MoveUrl[]
 }
 
-export interface Move {
+export interface MoveUrl {
   name: string
   url: string
 }
 
-export interface MoveDetails {
+export interface Move {
   name: string
   power: number
 }
 
-// Define the API slice
 const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
@@ -54,7 +53,7 @@ const pokemonApi = createApi({
         }
       }
     }),
-    getMove: builder.query<MoveDetails, string>({
+    getMove: builder.query<Move, string>({
       query: (name) => `move/${name}/`,
       transformResponse: (response: any) => {
         return {
