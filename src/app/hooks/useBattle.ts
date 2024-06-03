@@ -8,19 +8,13 @@ export const useBattle = () => {
   const { data: pokemons, isLoading: pokemonsLoading, error: pokemonsError } = useGetPokemonsQuery();
   const { data: rightPokemon, isLoading: rightPokemonLoading, error: rightPokemonError } = useGetPokemonQuery(pokemons?.results[0]?.name!, { skip: pokemonsLoading });
   const { data: leftPokemon, isLoading: leftPokemonLoading, error: leftPokemonError } = useGetPokemonQuery(pokemons?.results[1]?.name!, { skip: pokemonsLoading });
-  const { data: rightPokemonMove, isLoading: rightPokemonMoveLoading, error: rightPokemonMoveError } = useGetMoveQuery(rightPokemon?.moves[0]?.name!, { skip: rightPokemonLoading});
-  const { data: leftPokemonMove, isLoading: leftPokemonMoveLoading, error: leftPokemonMoveError } = useGetMoveQuery(leftPokemon?.moves[0]?.name!, { skip: leftPokemonLoading});
+  const { data: rightPokemonMove, error: rightPokemonMoveError } = useGetMoveQuery(rightPokemon?.moves[0]?.name!, { skip: rightPokemonLoading});
+  const { data: leftPokemonMove, error: leftPokemonMoveError } = useGetMoveQuery(leftPokemon?.moves[0]?.name!, { skip: leftPokemonLoading});
 
-  const [loading, setLoading] = useState("loading")
+  const [error, setError] = useState("")
+
   useEffect(() => {
     if (rightPokemon && leftPokemon && rightPokemonMove && leftPokemonMove) {
-      let winner = "tie"
-      if (leftPokemonMove.power < rightPokemonMove.power) {
-        winner = "rightPokemon"
-      } else if (leftPokemonMove.power > rightPokemonMove.power) {
-        winner = "leftPokemonMove"
-      }
-
       dispatch(setBattleGround({
         rightPokemon: {
           name: rightPokemon.name,
@@ -36,9 +30,10 @@ export const useBattle = () => {
         leftPokemonMove: leftPokemonMove,
         status: "ready"
       }))
-      setLoading("done")
+    } else if (pokemonsError || rightPokemonError || leftPokemonError || rightPokemonMoveError || leftPokemonMoveError) {
+      setError("Couldn't set up the battle ground. Please try again later!")
     }
-  }, [rightPokemon, leftPokemon, rightPokemonMove, leftPokemonMove])
+  }, [rightPokemon, leftPokemon, rightPokemonMove, leftPokemonMove, pokemonsError, rightPokemonError, leftPokemonError, rightPokemonMoveError, leftPokemonMoveError])
 
-  return { loading }
+  return { error }
 }

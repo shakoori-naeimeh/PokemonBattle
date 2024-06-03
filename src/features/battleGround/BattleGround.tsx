@@ -71,11 +71,15 @@ const Button = styled.button`
 
 export const BattleGround = () => {
   const dispatch = useAppDispatch()
-  useBattle()
-  const {leftPokemon, leftPokemonMove, rightPokemon, rightPokemonMove, status, log }  = useAppSelector(state => state.battleGround)
+
+  const { error } = useBattle()
+  const { leftPokemon, leftPokemonMove, rightPokemon, rightPokemonMove, status, log }  = useAppSelector(state => state.battleGround)
 
   if (status === "loading")
-    return <>loading...</> 
+    return <> Loading ... </>
+ 
+  if (!!error)
+    return <> {error} </> 
   
   return (
     <Container>
