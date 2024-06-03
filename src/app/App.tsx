@@ -1,10 +1,17 @@
 import React from 'react';
-import './App.css';
 import { BattleGround } from '../features/battleGround/BattleGround';
+import styled from '@emotion/styled'
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center
+`
 
 function App() {
   return (
+  <Container>
     <BattleGround/>
+  </Container>
   );
 }
 
