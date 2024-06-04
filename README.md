@@ -48,7 +48,7 @@ Once we have two players and their moves fetched, the action `setBattleGround` i
 When battle ground is set then we set its status to `ready`.
 When the player clicks the `Start Battle` button, the log sentense is shown in Battle Log box.   
 
-## What's missing:
-- Tests
-- Proper handling of loading and error states
-- Implement of pagination for the `getPokemons` query to get the next page of pokemons when the fetched ones are all used
+## With more time I would:
+- Add tests
+- Handle loading and error states properly
+- Implement pagination for the `getPokemons` query to get the next page of pokemons when the fetched ones are all used
