@@ -50,4 +50,5 @@ When the player clicks the `Start Battle` button, the log sentense is shown in B
 
 ## With more time I would
 - Add tests
+- Handle loading and error state properly
 - Implement pagination for the `getPokemons` query to get the next page of pokemons when the fetched ones are all used
