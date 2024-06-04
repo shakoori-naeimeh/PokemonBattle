@@ -2,7 +2,7 @@ import React from "react"
 import { useBattle } from "../../app/hooks/useBattle"
 import { useAppDispatch, useAppSelector } from "../../app/hooks/storeHooks"
 import { battleIsOver } from "./battleGroundSlice"
-import {Container, PokemonContainer, Pokemon, PokemonName, Power, PowerName, PokemonImage, BattleLogContainer, BattleLog, Button} from "./BattleGroundStyles"
+import {Container, PokemonContainer, Pokemon, PokemonName, Power, PowerName, PokemonImage, BattleLogContainer, LogBox, Button} from "./BattleGroundStyles"
 
 export const BattleGround = () => {
   const dispatch = useAppDispatch()
@@ -36,10 +36,12 @@ export const BattleGround = () => {
           </Power>
         </Pokemon>
       </PokemonContainer>
+      <h2>Battle Log</h2>
       <BattleLogContainer>
-        <BattleLog>{status === "done" ? log : ""}</BattleLog>
+        <LogBox>{status === "done" ? log : ""}</LogBox>
         <Button onClick={() => dispatch(battleIsOver())}>Start Battle!</Button>
       </BattleLogContainer>
+
     </Container>
   )
 }

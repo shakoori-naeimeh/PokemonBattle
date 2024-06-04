@@ -44,7 +44,7 @@ export const BattleLogContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `
-export const BattleLog = styled.div`
+export const LogBox = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid;
