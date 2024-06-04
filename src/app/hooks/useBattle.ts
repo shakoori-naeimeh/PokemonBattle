@@ -15,19 +15,23 @@ export const useBattle = () => {
 
   useEffect(() => {
     if (rightPokemon && leftPokemon && rightPokemonMove && leftPokemonMove) {
+      const playerOne = {
+        name: rightPokemon.name,
+        frontSprite: rightPokemon.frontSprite,
+        backSprite: rightPokemon.backSprite,
+        move: rightPokemonMove.name,
+        power: rightPokemonMove.power,
+      }
+      const playerTwo = {
+        name: leftPokemon.name,
+        frontSprite: leftPokemon.frontSprite,
+        backSprite: leftPokemon.backSprite,
+        move: leftPokemonMove.name,
+        power: leftPokemonMove.power,
+      }
+
       dispatch(setBattleGround({
-        rightPokemon: {
-          name: rightPokemon.name,
-          frontSprite: rightPokemon.frontSprite,
-          backSprite: rightPokemon.backSprite
-        }, 
-        leftPokemon: {
-          name: leftPokemon.name,
-          frontSprite: leftPokemon.frontSprite,
-          backSprite: leftPokemon.backSprite
-        },
-        rightPokemonMove: rightPokemonMove,
-        leftPokemonMove: leftPokemonMove,
+        players: [playerOne, playerTwo],
         status: "ready"
       }))
     } else if (pokemonsError || rightPokemonError || leftPokemonError || rightPokemonMoveError || leftPokemonMoveError) {

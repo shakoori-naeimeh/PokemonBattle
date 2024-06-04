@@ -73,7 +73,7 @@ export const BattleGround = () => {
   const dispatch = useAppDispatch()
 
   const { error } = useBattle()
-  const { leftPokemon, leftPokemonMove, rightPokemon, rightPokemonMove, status, log }  = useAppSelector(state => state.battleGround)
+  const { players, status, log }  = useAppSelector(state => state.battleGround)
 
   if (status === "loading")
     return <> Loading ... </>
@@ -83,24 +83,21 @@ export const BattleGround = () => {
   
   return (
     <Container>
-     <PokemonDetails>
-      <Pokemon>
-          <PokemonName>{rightPokemon?.name}</PokemonName>
-          <Power>
-            <PowerName>{rightPokemonMove?.name}:</PowerName> <p>{rightPokemonMove?.power || 0}</p>
-          </Power>
-        </Pokemon>
-        <PokemonImage src={rightPokemon?.frontSprite}/>
-     </PokemonDetails>
-     <PokemonDetails>
-      <PokemonImage src={leftPokemon?.frontSprite}/>
-      <Pokemon>
-          <PokemonName>{leftPokemon?.name}</PokemonName>
-          <Power>
-            <PowerName>{leftPokemonMove?.name}:</PowerName> <p>{leftPokemonMove?.power || 0}</p>
-          </Power>
-        </Pokemon>
-     </PokemonDetails>
+      {
+        players.map(player => {
+          return (
+            <PokemonDetails>
+              <Pokemon>
+                  <PokemonName>{player.name}</PokemonName>
+                  <Power>
+                    <PowerName>{player.move}:</PowerName> <p>{player.power || 0}</p>
+                  </Power>
+                </Pokemon>
+                <PokemonImage src={player.frontSprite}/>
+            </PokemonDetails>
+          )
+        })
+      }
      <BattleLogContainer>
       <BattleLog>{status === "done" ? log : ""}</BattleLog>
       <Button onClick={() => dispatch(battleIsOver())}>Start Battle!</Button>

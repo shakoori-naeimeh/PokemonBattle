@@ -1,11 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { MoveDetails } from '../shared.types';
 
-export interface PokemonUrl {
+const baseUrl = 'https://pokeapi.co/api/v2/'
+
+interface PokemonUrl {
   name: string;
   url: string;
 }
 
-export interface PokemonQueryResult {
+interface PokemonQueryResult {
   paginationMetaData: {
     count: number
     next: string
@@ -14,7 +17,7 @@ export interface PokemonQueryResult {
   results: PokemonUrl[]
 }
 
-export interface PokemonDetails {
+interface PokemonDetails {
   name: string
   baseStats: number
   frontSprite: string
@@ -23,19 +26,14 @@ export interface PokemonDetails {
   moves: MoveUrl[]
 }
 
-export interface MoveUrl {
+interface MoveUrl {
   name: string
   url: string
 }
 
-export interface Move {
-  name: string
-  power: number
-}
-
 const pokemonApi = createApi({
   reducerPath: 'pokemonApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://pokeapi.co/api/v2/' }),
+  baseQuery: fetchBaseQuery({ baseUrl: baseUrl }),
   endpoints: (builder) => ({
     getPokemons: builder.query<PokemonQueryResult, void>({
       query: () => 'pokemon',
@@ -53,7 +51,7 @@ const pokemonApi = createApi({
         }
       }
     }),
-    getMove: builder.query<Move, string>({
+    getMove: builder.query<MoveDetails, string>({
       query: (name) => `move/${name}/`,
       transformResponse: (response: any) => {
         return {

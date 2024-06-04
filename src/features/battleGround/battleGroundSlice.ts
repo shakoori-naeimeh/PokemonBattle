@@ -1,51 +1,33 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import type { MoveDetails } from '../shared.types'
 
-export interface MoveDetails {
-  name: string
-  power: number
-}
-
-export interface Pokemon {
+interface PokemonPlayer {
   name: string
   frontSprite: string
   backSprite: string
+  move: string
+  power: number
 }
 
-export interface BattleGroundState {
-  rightPokemon?: Pokemon
-  leftPokemon?: Pokemon
-  rightPokemonMove?: MoveDetails
-  leftPokemonMove?: MoveDetails
+interface BattleGroundState {
+  players: PokemonPlayer[]
   log?: string
   status: "loading" | "ready" | "done"
 }
 
 const initialState: BattleGroundState = {
-  rightPokemon: undefined,
-  leftPokemon: undefined,
-  rightPokemonMove: undefined,
-  leftPokemonMove: undefined,
+  players: [],
   log: "",
   status: "loading"
 }
 
-interface generateLogProps {
-  rightPokemonName: string | undefined
-  leftPokemonName: string | undefined
-  rightPokemonMove: MoveDetails | undefined
-  leftPokemonMove: MoveDetails | undefined
-}
-
-const generateLog = ({rightPokemonName, leftPokemonName, rightPokemonMove, leftPokemonMove}: generateLogProps) => {
-  if (!rightPokemonName || !leftPokemonName || !rightPokemonMove || !leftPokemonMove) 
-    return ""
-
-  if (leftPokemonMove.power === rightPokemonMove.power ) {
+const generateLog = (players: PokemonPlayer[]) => {
+  if (players[1].power === players[0].power ) {
     return "Draw"
-  } else if (leftPokemonMove.power > rightPokemonMove.power) {
-      return  `${leftPokemonName} lands a decisive blow with ${leftPokemonMove.name} knocking out ${rightPokemonName}!`
+  } else if (players[1].power > players[0].power) {
+      return  `${players[1].name} lands a decisive blow with ${players[1].move} knocking out ${players[0].name}!`
   } else {
-      return  `${rightPokemonName} lands a decisive blow with ${rightPokemonMove.name} knocking out ${leftPokemonName}!`
+      return  `${players[0].name} lands a decisive blow with ${players[1].move} knocking out ${players[1].name}!`
   }
 }
 
@@ -54,16 +36,9 @@ export const battleGroundSlice = createSlice({
   initialState,
   reducers: {
     setBattleGround: (state, action: PayloadAction<BattleGroundState>) => {
-      state.rightPokemon = action.payload.rightPokemon;
-      state.leftPokemon = action.payload.leftPokemon;
-      state.rightPokemonMove = action.payload.rightPokemonMove;
-      state.leftPokemonMove = action.payload.leftPokemonMove;
-      state.log = generateLog({
-        rightPokemonName: action.payload.rightPokemon?.name, 
-        leftPokemonName: action.payload.leftPokemon?.name,
-        rightPokemonMove: action.payload?.rightPokemonMove, 
-        leftPokemonMove: action.payload?.leftPokemonMove
-      })
+      state.players[0] = action.payload.players[0]
+      state.players[1] = action.payload.players[1]
+      state.log = generateLog(action.payload.players)
       state.status = action.payload.status;
     },
     battleIsOver: (state) => { state.status = "done" } 
